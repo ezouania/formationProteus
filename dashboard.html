@@ -1,22 +1,26 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Tableau de bord</title>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-</head>
-<body>
-  <h1>Page privée</h1>
-  <p>Tu es connecté !</p>
-  <button onclick="netlifyIdentity.logout()">Se déconnecter</button>
+<script>
+  netlifyIdentity.on('init', async (user) => {
+    if (!user) {
+      window.location.href = "login.html";
+      return;
+    }
 
-  <script>
-    netlifyIdentity.on('init', user => {
-      if (!user) {
-        window.location.href = 'login.html';
-      }
-    });
-    netlifyIdentity.init();
-  </script>
-</body>
-</html>
+    // Recharge les données utilisateur depuis Netlify Identity
+    const freshUser = await netlifyIdentity.refresh();
+
+    // Si l'email n'est pas confirmé
+    if (!freshUser || !freshUser.confirmed_at) {
+      alert("Ton email n’est pas confirmé. Clique sur le lien reçu par email, puis reconnecte-toi.");
+      netlifyIdentity.logout();
+      return;
+    }
+
+    document.getElementById("welcome").innerText = "Bienvenue " + freshUser.user_metadata.full_name;
+  });
+
+  netlifyIdentity.on('logout', () => {
+    window.location.href = "index.html";
+  });
+
+  netlifyIdentity.init();
+</script>
