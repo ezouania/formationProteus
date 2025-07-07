@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Tableau de bord</title>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+  <h1>Page privée</h1>
+  <p>Tu es connecté !</p>
+  <button onclick="netlifyIdentity.logout()">Se déconnecter</button>
+
+  <script>
+    netlifyIdentity.on('init', user => {
+      if (!user) {
+        window.location.href = 'login.html';
+      }
+    });
+    netlifyIdentity.init();
+  </script>
+</body>
+</html>
